@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Signup</title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<div class="glass-card">
+
+    <h1>Create Account</h1>
+
+    <form action="/signup" method="POST">
+
+        <div class="input-group">
+
+            <label>Username</label>
+
+            <input
+            type="text"
+            name="username"
+            required>
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Password</label>
+
+            <input
+            type="password"
+            name="password"
+            required>
+
+        </div>
+
+        <button type="submit">
+
+            Signup
+
+        </button>
+
+    </form>
+
+    <p>
+
+        Already have account?
+
+        <a href="/login">
+
+            Login
+
+        </a>
+
+    </p>
+
+</div>
+
+</body>
+</html>

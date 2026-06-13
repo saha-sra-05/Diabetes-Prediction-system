@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Patient History</title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        table{
+
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+
+        }
+
+        th,td{
+
+            border:1px solid white;
+            padding:12px;
+            text-align:center;
+
+        }
+
+        th{
+
+            background:#00bfff;
+            color:white;
+
+        }
+
+        td{
+
+            color:white;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="glass-card">
+
+    <h1>Patient History</h1>
+
+    <table>
+
+        <tr>
+
+            <th>Patient</th>
+
+            <th>Prediction</th>
+
+            <th>Confidence</th>
+
+            <th>Health Score</th>
+
+            <th>Date</th>
+
+        </tr>
+
+        {% for row in records %}
+
+        <tr>
+
+            <td>{{ row.patient_name }}</td>
+
+            <td>{{ row.prediction }}</td>
+
+            <td>{{ row.confidence }}%</td>
+
+            <td>{{ row.health_score }}</td>
+
+            <td>{{ row.created_at }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <br>
+
+    <a href="/">
+
+        <button>
+
+            Back To Dashboard
+
+        </button>
+
+    </a>
+
+</div>
+
+</body>
+</html>

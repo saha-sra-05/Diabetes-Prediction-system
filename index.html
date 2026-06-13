@@ -1,0 +1,530 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>AI Diabetes Prediction</title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        AI DIABETES PREDICTION SYSTEM
+
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+
+<div class="main-container">
+
+    <!-- LEFT PANEL -->
+
+    <div class="left-panel">
+
+        <div class="glass-card">
+
+            <h1>DIABETES PREDICTION</h1>
+
+            <p class="subtitle">
+
+                AI Powered Healthcare Recommendation System
+
+            </p>
+
+            <form action="/predict" method="POST">
+
+                <!-- PATIENT NAME -->
+
+                <div class="input-group">
+
+                    <label>Patient Name :</label>
+
+                    <input type="text"
+                    name="patient_name"
+                    value="{{ request.form.get('patient_name','') }}"
+                    required>
+
+                </div>
+
+                <!-- GENDER -->
+
+                <div class="input-group">
+
+                    <label>Gender :</label>
+
+                    <select name="gender" required>
+
+                        <option value="">Select</option>
+
+                        <option value="Male">Male</option>
+
+                        <option value="Female">Female</option>
+
+                    </select>
+
+                </div>
+
+                <!-- AGE -->
+
+                <div class="input-group">
+
+                    <label>Age :</label>
+
+                    <input type="number"
+                    name="age"
+                    value="{{ request.form.get('age','') }}"
+                    required>
+
+                </div>
+
+                <!-- BMI -->
+
+                <div class="input-group">
+
+                    <label>BMI :</label>
+
+                    <input type="number"
+                    step="any"
+                    name="bmi"
+                    value="{{ request.form.get('bmi','') }}"
+                    required>
+
+                </div>
+
+                <!-- HBA1C -->
+
+                <div class="input-group">
+
+                    <label>HbA1c :</label>
+
+                    <input type="number"
+                    step="any"
+                    name="hba1c"
+                    value="{{ request.form.get('hba1c','') }}"
+                    required>
+
+                </div>
+
+                <!-- GLUCOSE -->
+
+                <div class="input-group">
+
+                    <label>Blood Glucose :</label>
+
+                    <input type="number"
+                    step="any"
+                    name="glucose"
+                    value="{{ request.form.get('glucose','') }}"
+                    required>
+
+                </div>
+
+                <!-- HYPERTENSION -->
+
+                <div class="input-group">
+
+                    <label>Hypertension :</label>
+
+                    <select name="hypertension">
+
+                        <option value="0">No</option>
+
+                        <option value="1">Yes</option>
+
+                    </select>
+
+                </div>
+
+                <!-- HEART DISEASE -->
+
+                <div class="input-group">
+
+                    <label>Heart Disease :</label>
+
+                    <select name="heart_disease">
+
+                        <option value="0">No</option>
+
+                        <option value="1">Yes</option>
+
+                    </select>
+
+                </div>
+
+                <!-- SMOKING -->
+
+                <div class="input-group">
+
+                    <label>Smoking History :</label>
+
+                    <select name="smoking_history">
+
+                        <option value="never">Never</option>
+
+                        <option value="current">Current</option>
+
+                        <option value="former">Former</option>
+
+                        <option value="ever">Ever</option>
+
+                    </select>
+
+                </div>
+
+                <button type="submit">
+
+                    Analyze Health Risk
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+
+    <div class="right-panel">
+
+        {% if prediction %}
+
+        <div class="result-card">
+
+            <!-- MAIN RESULT -->
+
+            <h2 class="main-result">
+
+                Prediction :
+                {{ diabetic_status }}
+
+            </h2>
+
+            <h2 class="result-title"
+            style="color:{{ color }};">
+
+                {{ prediction }}
+
+            </h2>
+
+            <!-- HEALTH SCORE -->
+
+            <div class="score-box">
+
+                <h3>
+                    Confidence :
+                    {{ confidence }}%
+                </h3>
+
+                <h3>
+                    Health Score :
+                    {{ health_score }}/100
+                </h3>
+
+            </div>
+
+            <!-- RISK METER -->
+
+            <div class="risk-meter-container">
+
+                <div class="risk-meter">
+
+                    <div class="risk-fill"
+                    style="width:{{ confidence }}%;">
+                    </div>
+
+                </div>
+
+                <p class="risk-text">
+
+                    Diabetes Risk Meter
+
+                </p>
+
+            </div>
+
+            <!-- ALERTS -->
+
+            {% if alerts %}
+
+            <div class="alert-box">
+
+                <h2>Emergency Alerts</h2>
+
+                <ul>
+
+                    {% for alert in alerts %}
+
+                    <li>{{ alert }}</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+            {% endif %}
+
+            <!-- AI ANALYSIS -->
+
+            <div class="analysis-box">
+
+                <h2>AI Health Analysis</h2>
+
+                <ul>
+
+                    {% for item in analysis %}
+
+                    <li>{{ item }}</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+            <!-- RECOMMENDATIONS -->
+
+            <div class="recommend-box">
+
+                <h2>Personalized Recommendations</h2>
+
+                <ul>
+
+                    {% for rec in recommendations %}
+
+                    <li>{{ rec }}</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+            <!-- DIET PLAN -->
+
+            <div class="diet-box">
+
+                <h2>Recommended Diet Plan</h2>
+
+                <ul>
+
+                    {% for diet in diet_plan %}
+
+                    <li>{{ diet }}</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+            <!-- EXERCISE PLAN -->
+
+            <div class="exercise-box">
+
+                <h2>Exercise Recommendation</h2>
+
+                <ul>
+
+                    {% for ex in exercise_plan %}
+
+                    <li>{{ ex }}</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+            <!-- FUTURE RISK -->
+
+            <div class="future-box">
+
+                <h2>Future Health Prediction</h2>
+
+                <p>{{ future_risk }}</p>
+
+            </div>
+
+            <!-- HEALTH CHART -->
+
+            <div class="chart-box">
+
+                <h2>Health Indicators</h2>
+
+                <canvas id="healthChart"></canvas>
+
+            </div>
+
+            <!-- DOWNLOAD -->
+
+            <a href="/download_report">
+
+                <button class="download-btn">
+
+                    Download Medical Report
+
+                </button>
+<br><br>
+
+<a href="/history">
+
+    <button class="download-btn">
+
+        View Patient History
+
+    </button>
+
+</a>
+
+<br><br>
+
+<a href="/logout">
+
+    <button
+    style="background:red;">
+
+        Logout
+
+    </button>
+
+</a>
+
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+<!-- ======================================
+AI CHATBOT
+====================================== -->
+
+<div class="chatbot-box">
+
+    <h2>AI Healthcare Assistant</h2>
+
+    <div id="chat-area"
+    class="chat-area">
+
+    </div>
+
+    <input
+    type="text"
+    id="user-question"
+    placeholder="Ask healthcare questions...">
+
+    <br><br>
+
+    <button onclick="askBot()">
+
+        Ask AI
+
+    </button>
+
+    <button onclick="startVoice()">
+
+        🎤 Voice
+
+    </button>
+
+</div>
+
+<script>
+
+const ctx = document.getElementById('healthChart');
+
+if(ctx){
+
+new Chart(ctx, {
+
+    type:'bar',
+
+    data:{
+
+        labels:['BMI','HbA1c','Glucose'],
+
+        datasets:[{
+
+            label:'Health Values',
+
+            data:[
+
+                {{ bmi }},
+
+                {{ HbA1c_level }},
+
+                {{ blood_glucose_level }}
+
+            ],
+
+            backgroundColor:[
+
+                '#38bdf8',
+
+                '#22c55e',
+
+                '#f59e0b'
+
+            ],
+
+            borderRadius:10,
+
+            borderWidth:1
+
+        }]
+    },
+
+    options:{
+
+        responsive:true,
+
+        scales:{
+
+            y:{
+
+                beginAtZero:true,
+
+                max:1
+
+            }
+        }
+    }
+});
+}
+
+</script>
+
+<script
+src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+</body>
+</html>
+
